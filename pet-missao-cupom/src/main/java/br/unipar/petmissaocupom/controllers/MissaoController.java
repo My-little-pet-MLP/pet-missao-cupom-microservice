@@ -2,12 +2,17 @@ package br.unipar.petmissaocupom.controllers;
 
 import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.models.Missao;
+import br.unipar.petmissaocupom.repositories.MissaoRepository;
 import br.unipar.petmissaocupom.services.CupomService;
 import br.unipar.petmissaocupom.services.MissaoService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/missoes")
@@ -33,6 +38,11 @@ public class MissaoController {
     public Cupom completarMissoesDiarias(@PathVariable String userId) {
         // Verifica se todas as missões foram completadas e gera um cupom
         return cupomService.gerarCupomSeTodasMissoesCompletas(userId);
+    }
+
+    @PostMapping("/armazenar")
+    public void armazenarTodasMissoes() {
+        missaoService.armazenarTodasMissoes();
     }
 
 }

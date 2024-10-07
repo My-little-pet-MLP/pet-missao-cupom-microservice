@@ -15,19 +15,32 @@ public class Cupom {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String codigo;
+    private double porcentagem;
     private LocalDate dataGerado;
+    private LocalDate dataVencimento;
     private boolean utilizado;
     private String userId;
 
     public Cupom() {
     }
 
-    public Cupom(UUID id, String codigo, LocalDate dataGerado, boolean utilizado, String userId) {
+    public Cupom(UUID id, String codigo, double porcentagem,
+                 LocalDate dataGerado, LocalDate dataVencimento, boolean utilizado, String userId) {
         this.id = id;
         this.codigo = codigo;
+        this.porcentagem = porcentagem;
         this.dataGerado = dataGerado;
+        this.dataVencimento = dataVencimento;
         this.utilizado = utilizado;
         this.userId = userId;
+    }
+
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
     }
 
     public UUID getId() {
@@ -68,5 +81,13 @@ public class Cupom {
 
     public void setUtilizado(boolean utilizado) {
         this.utilizado = utilizado;
+    }
+
+    public double getPorcentagem() {
+        return porcentagem;
+    }
+
+    public void setPorcentagem(double porcentagem) {
+        this.porcentagem = porcentagem;
     }
 }
