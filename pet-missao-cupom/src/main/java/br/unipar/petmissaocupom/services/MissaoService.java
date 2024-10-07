@@ -10,14 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class MissaoService {
 
     @Autowired
     private MissaoRepository missaoRepository;
-    
+
     public List<Missao> gerarMissoesDiariasParaUsuario(String userId) {
         LocalDate hoje = LocalDate.now();
         List<Missao> missoesDoDia = missaoRepository.findByUserIdAndDataGerada(userId, hoje);
