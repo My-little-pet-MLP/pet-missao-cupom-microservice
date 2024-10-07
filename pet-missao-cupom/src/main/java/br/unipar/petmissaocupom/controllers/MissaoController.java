@@ -36,7 +36,6 @@ public class MissaoController {
 
     @PostMapping("/completar/{userId}")
     public Cupom completarMissoesDiarias(@PathVariable String userId) {
-        // Verifica se todas as missões foram completadas e gera um cupom
         return cupomService.gerarCupomSeTodasMissoesCompletas(userId);
     }
 

@@ -20,12 +20,10 @@ public class CupomService {
     @Autowired
     private MissaoService missaoService;
 
-    // Lista de cupons disponíveis
     private List<Cupom> cuponsDisponiveis = Arrays.asList(
             new Cupom(UUID.randomUUID(), "DESCONTO10", 10.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null),
             new Cupom(UUID.randomUUID(), "DESCONTO20", 20.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null),
             new Cupom(UUID.randomUUID(), "DESCONTO5", 5.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null)
-            // Adicione mais cupons conforme necessário
     );
 
     public Cupom gerarCupomSeTodasMissoesCompletas(String userId) {
@@ -51,25 +49,10 @@ public class CupomService {
         throw new RuntimeException("Missões não completadas.");
     }
 
-//    public Cupom gerarCupomSeTodasMissoesCompletas(String userId) {
-//        if (missaoService.verificarTodasMissoesCompletas(userId)) {
-//            Cupom cupom = new Cupom();
-//            cupom.setCodigo("DESCONTO10"); // Gere um código dinamicamente se preferir
-//            cupom.setUtilizado(false);
-//            cupom.setDataGerado(LocalDate.now());
-//            cupom.setUserId(userId);
-//            return cupomRepository.save(cupom);
-//        }
-//
-//        throw new RuntimeException("Missões não completadas.");
-//    }
-
-    // Armazenar vários cupons
     public List<Cupom> armazenarVariosCupons(List<Cupom> cupons) {
         return cupomRepository.saveAll(cupons);
     }
 
-    // Listar todos os cupons
     public List<Cupom> listarTodosCupons() {
         return cupomRepository.findAll();
     }
