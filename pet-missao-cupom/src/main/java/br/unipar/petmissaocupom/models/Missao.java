@@ -2,7 +2,7 @@ package br.unipar.petmissaocupom.models;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity(name = "MISSOES")
@@ -13,22 +13,18 @@ public class Missao {
     private UUID id;
     private String descricao;
     private boolean concluido;
-    private Date dataDoComeco;
+    private LocalDate dataGerada;
     private String userId;
-
-    @ManyToOne
-    private Pet pet;
 
     public Missao() {
     }
 
     public Missao(UUID id, String descricao, boolean concluido,
-                  Date dataDoComeco, Pet pet, String userId) {
+                  LocalDate dataGerada, String userId) {
         this.id = id;
         this.descricao = descricao;
         this.concluido = concluido;
-        this.dataDoComeco = dataDoComeco;
-        this.pet = pet;
+        this.dataGerada = dataGerada;
         this.userId = userId;
     }
 
@@ -56,12 +52,12 @@ public class Missao {
         this.descricao = descricao;
     }
 
-    public Date getDataDoComeco() {
-        return dataDoComeco;
+    public LocalDate getDataGerada() {
+        return dataGerada;
     }
 
-    public void setDataDoComeco(Date dataDoComeco) {
-        this.dataDoComeco = dataDoComeco;
+    public void setDataGerada(LocalDate dataGerada) {
+        this.dataGerada = dataGerada;
     }
 
     public String getUserId() {
@@ -72,11 +68,4 @@ public class Missao {
         this.userId = userId;
     }
 
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
 }

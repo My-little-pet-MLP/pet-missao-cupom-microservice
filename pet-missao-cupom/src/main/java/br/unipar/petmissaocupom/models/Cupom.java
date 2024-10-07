@@ -15,19 +15,21 @@ public class Cupom {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String codigo;
-    private LocalDate dataExpiracao;
+    private LocalDate dataGerado;
+    private boolean utilizado;
     private String userId;
 
     public Cupom() {
     }
 
-    public Cupom(String codigo, UUID id, LocalDate dataExpiracao, String userId) {
-        this.codigo = codigo;
+    public Cupom(UUID id, String codigo, LocalDate dataGerado, boolean utilizado, String userId) {
         this.id = id;
-        this.dataExpiracao = dataExpiracao;
+        this.codigo = codigo;
+        this.dataGerado = dataGerado;
+        this.utilizado = utilizado;
         this.userId = userId;
     }
-    
+
     public UUID getId() {
         return id;
     }
@@ -44,19 +46,27 @@ public class Cupom {
         this.codigo = codigo;
     }
 
-    public LocalDate getDataExpiracao() {
-        return dataExpiracao;
-    }
-
-    public void setDataExpiracao(LocalDate dataExpiracao) {
-        this.dataExpiracao = dataExpiracao;
-    }
-
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public LocalDate getDataGerado() {
+        return dataGerado;
+    }
+
+    public void setDataGerado(LocalDate dataGerado) {
+        this.dataGerado = dataGerado;
+    }
+
+    public boolean isUtilizado() {
+        return utilizado;
+    }
+
+    public void setUtilizado(boolean utilizado) {
+        this.utilizado = utilizado;
     }
 }
