@@ -1,5 +1,6 @@
 package br.unipar.petmissaocupom.services;
 
+import br.unipar.petmissaocupom.enuns.TipoMissao;
 import br.unipar.petmissaocupom.models.Missao;
 import br.unipar.petmissaocupom.repositories.MissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,11 @@ public class MissaoService {
 
     @Autowired
     private MissaoRepository missaoRepository;
+
+    public Missao insert(Missao missao) {
+        missao.setConcluido(false);
+        return missaoRepository.save(missao);
+    }
 
     public List<Missao> gerarMissoesDiariasParaUsuario(String userId) {
         LocalDate hoje = LocalDate.now();
@@ -40,16 +46,16 @@ public class MissaoService {
 
     public void armazenarTodasMissoes() {
         List<Missao> missoes = Arrays.asList(
-                new Missao(UUID.randomUUID(), "Colete 100 moedas", false, null, null),
-                new Missao(UUID.randomUUID(), "Derrote 10 inimigos", false, null, null),
-                new Missao(UUID.randomUUID(), "Complete uma fase", false, null, null),
-                new Missao(UUID.randomUUID(), "Conquiste 500 pontos", false, null, null),
-                new Missao(UUID.randomUUID(), "Jogue por 30 minutos", false, null, null),
-                new Missao(UUID.randomUUID(), "Passeio do Dia", false, null, null),
-                new Missao(UUID.randomUUID(), "Hora do Banho", false, null, null),
-                new Missao(UUID.randomUUID(), "Treino de Obediência", false, null, null),
-                new Missao(UUID.randomUUID(), "Brincadeira de Busca", false, null, null),
-                new Missao(UUID.randomUUID(), "Hora da Alimentação", false, null, null)
+                new Missao(UUID.randomUUID(), "Bricar por 20 minutos", false, null, TipoMissao.TEMPO,null),
+                new Missao(UUID.randomUUID(), "Trocar água", false, null, TipoMissao.ARQUIVO,null),
+                new Missao(UUID.randomUUID(), "Passear por 40 minutos", false, null, TipoMissao.TEMPO,null),
+                new Missao(UUID.randomUUID(), "Dar a patinha", false, null, TipoMissao.ARQUIVO,null),
+                new Missao(UUID.randomUUID(), "Ensinar o comando - senta", false, null, TipoMissao.ARQUIVO,null),
+                new Missao(UUID.randomUUID(), "Brincar de pegar bolinha por 15 minutos", false, null, TipoMissao.TEMPO,null),
+                new Missao(UUID.randomUUID(), "Faça uma sessão de fotos com alguma temática", false, null, TipoMissao.ARQUIVO,null),
+                new Missao(UUID.randomUUID(), "Ensinar o comanda - fica", false, null, TipoMissao.ARQUIVO,null),
+                new Missao(UUID.randomUUID(), "Esconda petiscos pela casa e deixe o seu animalzinho achar", false, null, TipoMissao.ARQUIVO,null),
+                new Missao(UUID.randomUUID(), "Dar um petisco", false, null, TipoMissao.ARQUIVO,null)
         );
 
         missaoRepository.saveAll(missoes);

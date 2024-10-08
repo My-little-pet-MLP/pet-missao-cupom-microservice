@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CupomService {
@@ -20,16 +17,27 @@ public class CupomService {
     @Autowired
     private MissaoService missaoService;
 
-    private List<Cupom> cuponsDisponiveis = Arrays.asList(
-            new Cupom(UUID.randomUUID(), "DESCONTO10", 10.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null),
-            new Cupom(UUID.randomUUID(), "DESCONTO20", 20.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null),
-            new Cupom(UUID.randomUUID(), "DESCONTO5", 5.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null)
-    );
+    private List<Cupom> cuponsDisponiveis;
+
+    public Cupom insert(Cupom cupom) {
+        return cupomRepository.save(cupom);
+    }
+
+    public void armazenarCupons() {
+        List<Cupom> cuponsDisponiveis = Arrays.asList(
+                new Cupom(UUID.randomUUID(), "DESCONTO10", 10.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null),
+                new Cupom(UUID.randomUUID(), "DESCONTO20", 20.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null),
+                new Cupom(UUID.randomUUID(), "DESCONTO5", 5.0, LocalDate.now(), LocalDate.now().plusDays(30), false, null)
+        );
+
+        cupomRepository.saveAll(cuponsDisponiveis);
+    }
 
     public Cupom gerarCupomSeTodasMissoesCompletas(String userId) {
         if (missaoService.verificarTodasMissoesCompletas(userId)) {
-            if (cuponsDisponiveis.isEmpty()) {
-                throw new RuntimeException("Nenhum cupom disponível.");
+
+            if (cuponsDisponiveis == null || cuponsDisponiveis.isEmpty()) {
+                armazenarCupons();
             }
 
             Random random = new Random();
@@ -45,7 +53,6 @@ public class CupomService {
 
             return cupomRepository.save(cupomGerado);
         }
-
         throw new RuntimeException("Missões não completadas.");
     }
 
@@ -55,6 +62,21 @@ public class CupomService {
 
     public List<Cupom> listarTodosCupons() {
         return cupomRepository.findAll();
+    }
+
+    public List<Cupom> listarCuponsPorUsuario(String userId) {
+        return cupomRepository.findByUserId(userId);
+    }
+
+    public void usarCupom(UUID id) {
+        Optional<Cupom> cupomOpt = cupomRepository.findById(id);
+        if (cupomOpt.isPresent()) {
+            Cupom cupom = cupomOpt.get();
+            cupom.setUtilizado(true);
+            cupomRepository.save(cupom);
+        } else {
+            throw new RuntimeException("Cupom não encontrado.");
+        }
     }
 
 }

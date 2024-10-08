@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface CupomRepository extends JpaRepository<Cupom, UUID> {
 
+    List<Cupom> findByUserId(String userId);
+
 }

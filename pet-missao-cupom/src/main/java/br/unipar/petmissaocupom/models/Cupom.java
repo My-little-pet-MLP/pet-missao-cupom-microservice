@@ -1,5 +1,6 @@
 package br.unipar.petmissaocupom.models;
 
+import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

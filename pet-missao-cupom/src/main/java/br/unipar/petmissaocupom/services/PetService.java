@@ -27,4 +27,15 @@ public class PetService {
         return petRepository.findById(id);
     }
 
+    public void desativarPet(UUID id) {
+        Optional<Pet> petOpt = petRepository.findById(id);
+        if (petOpt.isPresent()) {
+            Pet pet = petOpt.get();
+            pet.setAtivo(false);
+            petRepository.save(pet);
+        } else {
+            throw new RuntimeException("Pet não encontrado.");
+        }
+    }
+
 }

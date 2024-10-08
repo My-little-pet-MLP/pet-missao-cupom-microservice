@@ -1,5 +1,6 @@
 package br.unipar.petmissaocupom.models;
 
+import br.unipar.petmissaocupom.enuns.Porte;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,22 +18,23 @@ public class Pet {
     private String nome;
     private String raca;
     private int idade;
-    private String porte;
+    private Porte porte;
     private Date dataNascimento;
     private String userId;
+    private boolean ativo;
 
     public Pet() {
     }
 
-    public Pet(UUID id, String userId, Date dataNascimento, String porte,
-               int idade, String raca, String nome) {
+    public Pet(UUID id, String nome, String raca, int idade, Porte porte, Date dataNascimento, String userId, boolean ativo) {
         this.id = id;
-        this.userId = userId;
-        this.dataNascimento = dataNascimento;
-        this.porte = porte;
-        this.idade = idade;
-        this.raca = raca;
         this.nome = nome;
+        this.raca = raca;
+        this.idade = idade;
+        this.porte = porte;
+        this.dataNascimento = dataNascimento;
+        this.userId = userId;
+        this.ativo = ativo;
     }
 
     public UUID getId() {
@@ -67,11 +69,11 @@ public class Pet {
         this.idade = idade;
     }
 
-    public String getPorte() {
+    public Porte getPorte() {
         return porte;
     }
 
-    public void setPorte(String porte) {
+    public void setPorte(Porte porte) {
         this.porte = porte;
     }
 
@@ -89,5 +91,13 @@ public class Pet {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

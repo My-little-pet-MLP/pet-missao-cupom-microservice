@@ -1,5 +1,6 @@
 package br.unipar.petmissaocupom.models;
 
+import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -14,17 +15,18 @@ public class Missao {
     private String descricao;
     private boolean concluido;
     private LocalDate dataGerada;
+    private TipoMissao tipo;
     private String userId;
 
     public Missao() {
     }
 
-    public Missao(UUID id, String descricao, boolean concluido,
-                  LocalDate dataGerada, String userId) {
+    public Missao(UUID id, String descricao, boolean concluido, LocalDate dataGerada, TipoMissao tipo, String userId) {
         this.id = id;
         this.descricao = descricao;
         this.concluido = concluido;
         this.dataGerada = dataGerada;
+        this.tipo = tipo;
         this.userId = userId;
     }
 
@@ -68,4 +70,11 @@ public class Missao {
         this.userId = userId;
     }
 
+    public TipoMissao getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoMissao tipo) {
+        this.tipo = tipo;
+    }
 }
