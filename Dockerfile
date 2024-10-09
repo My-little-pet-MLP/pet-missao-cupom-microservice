@@ -18,7 +18,7 @@ COPY --from=builder /app/target/*.jar app.jar
 # Copiar o arquivo .env se ele existir
 # COPY .env .env
 
-EXPOSE 9093
+EXPOSE 8080
 
 # Comando para executar a aplicação
 CMD ["java", "-jar", "app.jar"]
