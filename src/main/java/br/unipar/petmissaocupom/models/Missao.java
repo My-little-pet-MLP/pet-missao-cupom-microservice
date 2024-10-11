@@ -4,6 +4,7 @@ import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "MISSOES")
@@ -14,14 +15,14 @@ public class Missao {
     private UUID id;
     private String descricao;
     private boolean concluido;
-    private LocalDate dataGerada;
+    private Date dataGerada;
     private TipoMissao tipo;
     private String userId;
 
     public Missao() {
     }
 
-    public Missao(UUID id, String descricao, boolean concluido, LocalDate dataGerada, TipoMissao tipo, String userId) {
+    public Missao(UUID id, String descricao, boolean concluido, Date dataGerada, TipoMissao tipo, String userId) {
         this.id = id;
         this.descricao = descricao;
         this.concluido = concluido;
@@ -54,11 +55,11 @@ public class Missao {
         this.descricao = descricao;
     }
 
-    public LocalDate getDataGerada() {
+    public Date getDataGerada() {
         return dataGerada;
     }
 
-    public void setDataGerada(LocalDate dataGerada) {
+    public void setDataGerada(Date dataGerada) {
         this.dataGerada = dataGerada;
     }
 

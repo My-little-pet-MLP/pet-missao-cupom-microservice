@@ -2,6 +2,7 @@ package br.unipar.petmissaocupom.controllers;
 
 import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.services.CupomService;
+import br.unipar.petmissaocupom.services.MissaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,9 @@ public class CupomController {
     @Autowired
     private CupomService cupomService;
 
+    @Autowired
+    private MissaoService missaoService;
+
     @Operation(summary = "Inserir cupom")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom criado com sucesso",
@@ -35,6 +39,31 @@ public class CupomController {
     public ResponseEntity<Cupom> createCupom(@RequestBody Cupom cupom) {
         Cupom saveCupom = cupomService.createCupom(cupom);
         return ResponseEntity.ok(saveCupom);
+    }
+
+    @Operation(summary = "Verifica se todas as missões do usuário estão concluídas e insere o userId no cupom")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "UserId inserido no cupom com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Cupom.class))),
+            @ApiResponse(responseCode = "404", description = "Cupom ou missões não encontrados",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content)
+    })
+    @PostMapping("/verificarEInserir/{userId}/{cupomId}")
+    public ResponseEntity<Cupom> verificarEInserirUserIdNoCupom(
+            @PathVariable String userId,
+            @PathVariable UUID cupomId) {
+
+        boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
+
+        if (todasConcluidas) {
+            Cupom cupomAtualizado = cupomService.inserirUserIdNoCupom(cupomId, userId);
+            return ResponseEntity.ok(cupomAtualizado);
+        } else {
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
     @Operation(summary = "Gerar o cupom para o usuario")
@@ -57,8 +86,10 @@ public class CupomController {
 
     @Operation(summary = "Lista todos os cupons")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cupons listados com sucesso"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Cupons listados com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = @Content)
     })
     @GetMapping
     public List<Cupom> listarCupons() {
@@ -67,9 +98,12 @@ public class CupomController {
 
     @Operation(summary = "Lista todos os cupons do usuario")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cupons listados com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Servidor não encontrou o usuário especificado"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Cupons listados com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Servidor não encontrou o usuário especificado",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                    content = @Content)
     })
     @GetMapping("/usuario/{userId}")
     public List<Cupom> listarCuponsPorUsuario(@PathVariable String userId) {

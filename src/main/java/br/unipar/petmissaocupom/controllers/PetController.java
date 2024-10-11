@@ -2,7 +2,6 @@ package br.unipar.petmissaocupom.controllers;
 
 import br.unipar.petmissaocupom.models.Pet;
 import br.unipar.petmissaocupom.services.PetService;
-import br.unipar.petmissaocupom.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,9 +20,6 @@ public class PetController {
 
     @Autowired
     private PetService petService;
-
-    @Autowired
-    private UserService userService;
 
     @Operation(summary = "Insere um novo pet para o usuário")
     @ApiResponses(value = {
