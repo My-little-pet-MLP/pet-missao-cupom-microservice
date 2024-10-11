@@ -1,12 +1,11 @@
 package br.unipar.petmissaocupom.models;
 
-import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "CUPONS")
@@ -17,8 +16,8 @@ public class Cupom {
     private UUID id;
     private String codigo;
     private double porcentagem;
-    private LocalDate dataGerado;
-    private LocalDate dataVencimento;
+    private Date dataGerado;
+    private Date dataVencimento;
     private boolean utilizado;
     private String userId;
 
@@ -26,7 +25,7 @@ public class Cupom {
     }
 
     public Cupom(UUID id, String codigo, double porcentagem,
-                 LocalDate dataGerado, LocalDate dataVencimento, boolean utilizado, String userId) {
+                 Date dataGerado, Date dataVencimento, boolean utilizado, String userId) {
         this.id = id;
         this.codigo = codigo;
         this.porcentagem = porcentagem;
@@ -36,11 +35,11 @@ public class Cupom {
         this.userId = userId;
     }
 
-    public LocalDate getDataVencimento() {
+    public Date getDataVencimento() {
         return dataVencimento;
     }
 
-    public void setDataVencimento(LocalDate dataVencimento) {
+    public void setDataVencimento(Date dataVencimento) {
         this.dataVencimento = dataVencimento;
     }
 
@@ -68,11 +67,11 @@ public class Cupom {
         this.userId = userId;
     }
 
-    public LocalDate getDataGerado() {
+    public Date getDataGerado() {
         return dataGerado;
     }
 
-    public void setDataGerado(LocalDate dataGerado) {
+    public void setDataGerado(Date dataGerado) {
         this.dataGerado = dataGerado;
     }
 

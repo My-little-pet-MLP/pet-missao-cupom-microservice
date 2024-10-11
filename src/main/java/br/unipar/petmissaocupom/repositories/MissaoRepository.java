@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface MissaoRepository extends JpaRepository<Missao, UUID> {
 
     List<Missao> findByUserIdAndDataGerada(String userId, LocalDate dataGerada);
-
+    List<Missao> findByUserId(String userId);
 }

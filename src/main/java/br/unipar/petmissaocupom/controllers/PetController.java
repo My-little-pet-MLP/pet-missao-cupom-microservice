@@ -32,13 +32,11 @@ public class PetController {
     })
     @PostMapping("/user/{userId}")
     public ResponseEntity<Pet> insert(@PathVariable String userId, @RequestBody Pet pet) {
-        // Valida o userId com a API de usuários
         if (!userService.isUserValid(userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(null); // Pode também retornar uma mensagem explicando o erro
+                    .body(null);
         }
-
-        pet.setUserId(userId); // Certifique-se de que o userId no pet seja o correto
+        pet.setUserId(userId);
         Pet savedPet = petService.insert(pet);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPet);
     }
@@ -76,7 +74,6 @@ public class PetController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @Operation(summary = "Desativar pet")
     @ApiResponses(value = {
