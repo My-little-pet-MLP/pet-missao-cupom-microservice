@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PetService {
@@ -41,10 +42,15 @@ public class PetService {
 
     public List<Pet> listPetByUserId(String userId) {
         List<Pet> pets = petRepository.findByUserId(userId);
+        List<Pet> petsAtivos = pets.stream()
+                .filter(Pet::isAtivo)
+                .collect(Collectors.toList());
+
         if(pets.isEmpty()){
             throw new EntityNotFoundException("Nenhum pet ativo encontrado.");
         }
-        return pets;
+
+        return petsAtivos;
     }
 
     public Optional<Pet> getPetById(UUID id) {

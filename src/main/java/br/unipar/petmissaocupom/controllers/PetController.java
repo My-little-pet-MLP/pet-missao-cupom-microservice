@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,14 @@ public class PetController {
     })
     @PostMapping("/user/{userId}")
     public ResponseEntity<Pet> createPet(@PathVariable String userId, @RequestBody Pet pet) {
-        pet.setUserId(userId);
-        pet.setAtivo(true);
-        Pet savedPet = petService.createPet(pet);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPet);
+        try {
+            pet.setUserId(userId);
+            pet.setAtivo(true);
+            Pet savedPet = petService.createPet(pet);
+            return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
@@ -57,6 +62,8 @@ public class PetController {
         try {
             List<Pet> pets = petService.listPetByUserId(userId);
             return new ResponseEntity<>(pets, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -46,23 +46,6 @@ public class MissaoService {
         return missoesDoDia;
     }
 
-//    public void armazenarTodasMissoes() {
-//        List<Missao> missoes = Arrays.asList(
-//                new Missao(UUID.randomUUID(), "Bricar por 20 minutos", false, null, TipoMissao.TEMPO,null),
-//                new Missao(UUID.randomUUID(), "Trocar água", false, null, TipoMissao.ARQUIVO,null),
-//                new Missao(UUID.randomUUID(), "Passear por 40 minutos", false, null, TipoMissao.TEMPO,null),
-//                new Missao(UUID.randomUUID(), "Dar a patinha", false, null, TipoMissao.ARQUIVO,null),
-//                new Missao(UUID.randomUUID(), "Ensinar o comando - senta", false, null, TipoMissao.ARQUIVO,null),
-//                new Missao(UUID.randomUUID(), "Brincar de pegar bolinha por 15 minutos", false, null, TipoMissao.TEMPO,null),
-//                new Missao(UUID.randomUUID(), "Faça uma sessão de fotos com alguma temática", false, null, TipoMissao.ARQUIVO,null),
-//                new Missao(UUID.randomUUID(), "Ensinar o comanda - fica", false, null, TipoMissao.ARQUIVO,null),
-//                new Missao(UUID.randomUUID(), "Esconda petiscos pela casa e deixe o seu animalzinho achar", false, null, TipoMissao.ARQUIVO,null),
-//                new Missao(UUID.randomUUID(), "Dar um petisco", false, null, TipoMissao.ARQUIVO,null)
-//        );
-//
-//        missaoRepository.saveAll(missoes);
-//    }
-
     public List<Missao> listarMissoesDoUsuario(String userId) {
         return missaoRepository.findTop5ByUserIdOrderByDataGeradaDesc(userId);
     }
@@ -76,10 +59,13 @@ public class MissaoService {
         return false;
     }
 
-    public Missao concluirMissao(UUID missaoId) {
+    public Missao concluirMissao(UUID missaoId, String userId) {
         Missao missao = missaoRepository.findById(missaoId)
                 .orElseThrow(() -> new EntityNotFoundException("Missão não encontrada com o id: " + missaoId));
 
+        if (!missao.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Usuário não autorizado a concluir esta missão.");
+        }
         if (missao.isConcluido()) {
             throw new IllegalStateException("Missão já está concluída.");
         }

@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +37,14 @@ public class MissaoController {
     })
     @PostMapping
     public ResponseEntity<Missao> createMissao(@RequestBody Missao missao) {
-        Missao novaMissao = missaoService.createMissao(missao);
-        return ResponseEntity.ok(novaMissao);
+        try {
+            Missao novaMissao = missaoService.createMissao(missao);
+            return new ResponseEntity<>(novaMissao, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Lista todas as 5 missoes do usuário")
@@ -51,8 +59,14 @@ public class MissaoController {
     })
     @GetMapping("/listar/{userId}")
     public ResponseEntity<List<Missao>> listarMissoes(@PathVariable String userId) {
-        List<Missao> missoes = missaoService.listarMissoesDoUsuario(userId);
-        return ResponseEntity.ok(missoes);
+        try {
+            List<Missao> missoes = missaoService.listarMissoesDoUsuario(userId);
+            return new ResponseEntity<>(missoes, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Gera missões diárias para um usuário")
@@ -66,8 +80,15 @@ public class MissaoController {
                     content = @Content)
     })
     @PostMapping("/gerar/{userId}")
-    public List<Missao> gerarMissoesDiarias(@PathVariable String userId) {
-        return missaoService.gerarMissoesDiariasParaUsuario(userId);
+    public ResponseEntity<List<Missao>> gerarMissoesDiarias(@PathVariable String userId) {
+        try {
+            List<Missao> missoes = missaoService.gerarMissoesDiariasParaUsuario(userId);
+            return new ResponseEntity<>(missoes, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Verificar se todas as missoes do usuário estão concluidas")
@@ -82,8 +103,14 @@ public class MissaoController {
     })
     @GetMapping("/verificarConcluidas/{userId}")
     public ResponseEntity<Boolean> verificarMissoesConcluidas(@PathVariable String userId) {
-        boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
-        return ResponseEntity.ok(todasConcluidas);
+        try {
+            boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
+            return new ResponseEntity<>(todasConcluidas, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Marca uma missão como concluída")
@@ -97,9 +124,15 @@ public class MissaoController {
                     content = @Content)
     })
     @PutMapping("/concluir/{missaoId}")
-    public ResponseEntity<Missao> concluirMissao(@PathVariable UUID missaoId) {
-        Missao missaoConcluida = missaoService.concluirMissao(missaoId);
-        return ResponseEntity.ok(missaoConcluida);
+    public ResponseEntity<Missao> concluirMissao(@PathVariable UUID missaoId, @PathVariable String userId) {
+        try {
+            Missao missaoConcluida = missaoService.concluirMissao(missaoId, userId);
+            return new ResponseEntity<>(missaoConcluida, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

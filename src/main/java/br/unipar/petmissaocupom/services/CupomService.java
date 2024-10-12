@@ -82,12 +82,6 @@ public class CupomService {
             throw new IllegalStateException("O cupom já está desativado.");
         }
 
-        // Verifica se o cupom já está vencido
-//        Date hoje = new Date();
-//        if (hoje.after(cupom.getDataVencimento())) {
-//            throw new IllegalStateException("O cupom já venceu e não pode ser usado.");
-//        }
-
         cupom.setUtilizado(false);
         return cupomRepository.save(cupom);
     }
@@ -95,6 +89,13 @@ public class CupomService {
     public Cupom findById(UUID id) {
         return cupomRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cupom não encontrado com o id: " + id));
+    }
+
+    public Cupom findCupomByUserId(UUID cupomId, String userId) {
+        Cupom cupom = cupomRepository.findByIdAndUserId(cupomId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Cupom não encontrado para o usuário com id: " + userId));
+
+        return cupom;
     }
 
 }
