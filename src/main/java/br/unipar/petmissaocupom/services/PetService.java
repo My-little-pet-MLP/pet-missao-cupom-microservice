@@ -40,7 +40,7 @@ public class PetService {
     }
 
     public List<Pet> listPetByUserId(String userId) {
-        List<Pet> pets = petRepository.findByIsActiveTrue();
+        List<Pet> pets = petRepository.findByLojaId(userId);
         if(pets.isEmpty()){
             throw new EntityNotFoundException("Nenhum pet ativo encontrado.");
         }
