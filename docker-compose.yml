@@ -1,28 +1,16 @@
-version: '3'
+version: '3.8'
 
 services:
-  zookeeper:
-    image: wurstmeister/zookeeper:latest
-    ports:
-      - "2181:2181"
-    networks:
-      - my-little-pet-kafka
-  kafka:
-    image: wurstmeister/kafka:latest
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "9093:9093"
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_CREATE_TOPICS: "pets:1:1, missoes:1:1, cupons:1:1"
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:9093
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - zookeeper
+    restart: always
     networks:
-      - my-little-pet-kafka
+      - app-network
+
 networks:
-  my-little-pet-kafka:
+  app-network:
+    driver: bridge
