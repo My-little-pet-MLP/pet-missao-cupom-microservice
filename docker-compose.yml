@@ -7,10 +7,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9093:9093"
-    restart: always
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
