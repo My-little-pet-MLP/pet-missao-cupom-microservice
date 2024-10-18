@@ -22,11 +22,13 @@ public class Pet {
     private Date dataNascimento;
     private String userId;
     private boolean ativo;
+    private String imagemUrl;
 
     public Pet() {
     }
 
-    public Pet(UUID id, String nome, String raca, int idade, Porte porte, Date dataNascimento, String userId, boolean ativo) {
+    public Pet(UUID id, String nome, String raca, int idade, Porte porte,
+               Date dataNascimento, String userId, boolean ativo, String imagemUrl) {
         this.id = id;
         this.nome = nome;
         this.raca = raca;
@@ -35,6 +37,15 @@ public class Pet {
         this.dataNascimento = dataNascimento;
         this.userId = userId;
         this.ativo = ativo;
+        this.imagemUrl = imagemUrl;
+    }
+
+    public String getImagemUrl() {
+        return imagemUrl;
+    }
+
+    public void setImagemUrl(String imagemUrl) {
+        this.imagemUrl = imagemUrl;
     }
 
     public UUID getId() {
