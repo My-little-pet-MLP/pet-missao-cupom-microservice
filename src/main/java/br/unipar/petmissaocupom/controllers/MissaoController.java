@@ -101,7 +101,7 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @GetMapping("/verificarConcluidas/{userId}")
+    @GetMapping("/verificar-concluidas/{userId}")
     public ResponseEntity<Boolean> verificarMissoesConcluidas(@PathVariable String userId) {
         try {
             boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
@@ -123,7 +123,7 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PutMapping("/concluir/{missaoId}")
+    @PutMapping("/concluir/{userId}/{missaoId}")
     public ResponseEntity<Missao> concluirMissao(@PathVariable UUID missaoId, @PathVariable String userId) {
         try {
             Missao missaoConcluida = missaoService.concluirMissao(missaoId, userId);

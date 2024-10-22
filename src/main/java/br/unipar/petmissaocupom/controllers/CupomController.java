@@ -109,7 +109,7 @@ public class CupomController {
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                     content = @Content)
     })
-    @GetMapping
+    @GetMapping("/listar-cupons")
     public ResponseEntity<List<Cupom>> listarCupons() {
         try {
             List<Cupom> cupons = cupomService.listarTodosCupons();
