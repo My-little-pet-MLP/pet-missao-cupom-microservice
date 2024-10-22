@@ -1,11 +1,9 @@
 package br.unipar.petmissaocupom.controllers;
 
-import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.models.Pet;
 import br.unipar.petmissaocupom.services.PetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,8 +26,7 @@ public class PetController {
     @Operation(summary = "Insere um novo pet para o usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Pet criado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
@@ -72,8 +69,7 @@ public class PetController {
     @Operation(summary = "Obtém um pet pelo seu ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Pet encontrado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Pet não encontrado",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
@@ -93,8 +89,7 @@ public class PetController {
     @Operation(summary = "Desativar pet")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Pet desativado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Pet não encontrado",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",

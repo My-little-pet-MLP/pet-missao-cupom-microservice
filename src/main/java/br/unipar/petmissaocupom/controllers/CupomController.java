@@ -52,8 +52,7 @@ public class CupomController {
     @Operation(summary = "Verifica se todas as missões do usuário estão concluídas e insere o userId no cupom")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "UserId inserido no cupom com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Cupom ou missões não encontrados",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
@@ -81,8 +80,7 @@ public class CupomController {
     @Operation(summary = "Gerar o cupom para o usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom gerado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
@@ -143,8 +141,7 @@ public class CupomController {
     @Operation(summary = "Desativa um cupom alterando isUtilizado para false")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom desativado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
@@ -165,8 +162,7 @@ public class CupomController {
     @Operation(summary = "Busca um cupom por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom encontrado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cupom.class))),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
