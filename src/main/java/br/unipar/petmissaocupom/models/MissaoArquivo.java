@@ -1,6 +1,5 @@
 package br.unipar.petmissaocupom.models;
 
-import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -17,8 +16,8 @@ public class MissaoArquivo extends Missao {
     }
 
     public MissaoArquivo(UUID id, String descricao, Date dataGerada,
-                         TipoMissao tipo, String userId, String arquivoUrl) {
-        super(id, descricao, false,dataGerada, tipo, userId);
+                         String userId, String arquivoUrl) {
+        super(id, descricao, false,dataGerada, userId);
         this.arquivoUrl = arquivoUrl;
     }
 

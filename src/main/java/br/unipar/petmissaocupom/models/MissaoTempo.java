@@ -1,6 +1,5 @@
 package br.unipar.petmissaocupom.models;
 
-import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -18,8 +17,8 @@ public class MissaoTempo extends Missao {
     }
 
     public MissaoTempo(UUID id, String descricao, Date dataGerada,
-                       TipoMissao tipo, String userId, long tempoLimite, boolean temporizadorAtivado) {
-        super(id, descricao, false, dataGerada, tipo, userId);
+                       String userId, long tempoLimite, boolean temporizadorAtivado) {
+        super(id, descricao, false, dataGerada, userId);
         this.tempoLimite = tempoLimite;
         this.temporizadorAtivado = temporizadorAtivado;
     }
