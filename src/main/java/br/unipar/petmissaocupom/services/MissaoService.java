@@ -1,6 +1,8 @@
 package br.unipar.petmissaocupom.services;
 
 import br.unipar.petmissaocupom.models.Missao;
+import br.unipar.petmissaocupom.models.MissaoArquivo;
+import br.unipar.petmissaocupom.models.MissaoTempo;
 import br.unipar.petmissaocupom.repositories.MissaoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,19 @@ public class MissaoService {
         }
         if (missao.isConcluido()) {
             throw new IllegalStateException("Missão já está concluída.");
+        }
+
+        if (missao instanceof MissaoArquivo) {
+            MissaoArquivo missaoArquivo = (MissaoArquivo) missao;
+            if (missaoArquivo.getArquivoUrl() == null || !missaoArquivo.getArquivoUrl().isEmpty()) {
+                throw new IllegalStateException("Arquivo não encontrado para a missão de arquivo.");
+            }
+        } else if (missao instanceof MissaoTempo) {
+            MissaoTempo missaoTempo = (MissaoTempo) missao;
+            long tempoAtual = System.currentTimeMillis();
+            if (tempoAtual < missaoTempo.getTempoLimite()) {
+                throw new IllegalStateException("O tempo da missão não expirou.");
+            }
         }
 
         missao.setConcluido(true);

@@ -3,12 +3,13 @@ package br.unipar.petmissaocupom.models;
 import br.unipar.petmissaocupom.enuns.TipoMissao;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "MISSOES")
-public class Missao {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "TIPO", discriminatorType = DiscriminatorType.STRING)
+public abstract class Missao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,8 +17,10 @@ public class Missao {
     private String descricao;
     private boolean concluido;
     private Date dataGerada;
-    private TipoMissao tipo;
     private String userId;
+
+    @Enumerated(EnumType.STRING)
+    private TipoMissao tipo;
 
     public Missao() {
     }
@@ -78,4 +81,6 @@ public class Missao {
     public void setTipo(TipoMissao tipo) {
         this.tipo = tipo;
     }
+
+    public abstract void concluir();
 }

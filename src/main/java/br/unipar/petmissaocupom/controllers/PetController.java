@@ -96,7 +96,7 @@ public class PetController {
        }
 
        Pet updatedPet = petService.desativarPet(petId);
-       return ResponseEntity.ok(updatedPet);
+        return new ResponseEntity<>(updatedPet, HttpStatus.OK);
     }
 
 }
