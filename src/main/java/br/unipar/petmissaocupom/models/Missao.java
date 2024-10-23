@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Entity(name = "MISSOES")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "TIPO", discriminatorType = DiscriminatorType.STRING)
 public abstract class Missao {
 
     @Id
