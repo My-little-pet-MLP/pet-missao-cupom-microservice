@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,14 +38,8 @@ public class CupomController {
     })
     @PostMapping
     public ResponseEntity<Cupom> createCupom(@RequestBody Cupom cupom) {
-        try {
-            Cupom saveCupom = cupomService.createCupom(cupom);
-            return ResponseEntity.ok(saveCupom);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Cupom saveCupom = cupomService.createCupom(cupom);
+        return new ResponseEntity<>(saveCupom, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Verifica se todas as missões do usuário estão concluídas e insere o userId no cupom")
@@ -62,18 +55,12 @@ public class CupomController {
     public ResponseEntity<Cupom> verificarEInserirUserIdNoCupom(
             @PathVariable String userId,
             @PathVariable UUID cupomId) {
-        try {
-            boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
-            if (todasConcluidas) {
-                Cupom cupomAtualizado = cupomService.inserirUserIdNoCupom(cupomId, userId);
-                return ResponseEntity.ok(cupomAtualizado);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            }
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
+        if (todasConcluidas) {
+            Cupom cupomAtualizado = cupomService.inserirUserIdNoCupom(cupomId, userId);
+            return new ResponseEntity<>(cupomAtualizado, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
@@ -90,14 +77,8 @@ public class CupomController {
     public ResponseEntity<Cupom> inserirUserIdNoCupom(
             @PathVariable UUID cupomId,
             @RequestParam String userId) {
-        try {
-            Cupom cupomAtualizado = cupomService.inserirUserIdNoCupom(cupomId, userId);
-            return ResponseEntity.ok(cupomAtualizado);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       Cupom cupomAtualizado = cupomService.inserirUserIdNoCupom(cupomId, userId);
+        return new ResponseEntity<>(cupomAtualizado, HttpStatus.OK);
     }
 
     @Operation(summary = "Lista todos os cupons")
@@ -109,12 +90,8 @@ public class CupomController {
     })
     @GetMapping("/listar-cupons")
     public ResponseEntity<List<Cupom>> listarCupons() {
-        try {
-            List<Cupom> cupons = cupomService.listarTodosCupons();
-            return new ResponseEntity<>(cupons, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       List<Cupom> cupons = cupomService.listarTodosCupons();
+       return new ResponseEntity<>(cupons, HttpStatus.OK);
     }
 
     @Operation(summary = "Lista todos os cupons do usuario")
@@ -128,14 +105,8 @@ public class CupomController {
     })
     @GetMapping("/usuario/{userId}")
     public ResponseEntity<List<Cupom>> listarCuponsPorUsuario(@PathVariable String userId) {
-        try {
-            List<Cupom> cupons = cupomService.listarCuponsPorUsuario(userId);
-            return new ResponseEntity<>(cupons, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       List<Cupom> cupons = cupomService.listarCuponsPorUsuario(userId);
+       return new ResponseEntity<>(cupons, HttpStatus.OK);
     }
 
     @Operation(summary = "Desativa um cupom alterando isUtilizado para false")
@@ -149,14 +120,8 @@ public class CupomController {
     })
     @PutMapping("/desativar/{id}")
     public ResponseEntity<Cupom> desativarCupom(@PathVariable UUID id) {
-        try {
-            Cupom updateCupom = cupomService.desativarCupom(id);
-            return ResponseEntity.ok(updateCupom);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Cupom updateCupom = cupomService.desativarCupom(id);
+        return new ResponseEntity<>(updateCupom, HttpStatus.OK);
     }
 
     @Operation(summary = "Busca um cupom por ID")
@@ -170,14 +135,8 @@ public class CupomController {
     })
     @GetMapping("/{cupomId}")
     public ResponseEntity<Cupom> findById(@PathVariable UUID cupomId) {
-        try {
-            Cupom cupom = cupomService.findById(cupomId);
-            return new ResponseEntity<>(cupom, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Cupom cupom = cupomService.findById(cupomId);
+        return new ResponseEntity<>(cupom, HttpStatus.OK);
     }
 
     @Operation(summary = "Busca um cupom por ID e UserId")
@@ -191,14 +150,8 @@ public class CupomController {
     })
     @GetMapping("/{cupomId}/user/{userId}")
     public ResponseEntity<Cupom> findCupomByUserId(@PathVariable UUID cupomId, @PathVariable String userId) {
-        try {
-            Cupom cupom = cupomService.findCupomByUserId(cupomId, userId);
-            return new ResponseEntity<>(cupom, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       Cupom cupom = cupomService.findCupomByUserId(cupomId, userId);
+       return new ResponseEntity<>(cupom, HttpStatus.OK);
     }
 
 }

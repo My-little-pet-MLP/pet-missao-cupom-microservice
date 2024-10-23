@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +33,10 @@ public class PetController {
     })
     @PostMapping("/user/{userId}")
     public ResponseEntity<Pet> createPet(@PathVariable String userId, @RequestBody Pet pet) {
-        try {
-            pet.setUserId(userId);
-            pet.setAtivo(true);
-            Pet savedPet = petService.createPet(pet);
-            return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        pet.setUserId(userId);
+        pet.setAtivo(true);
+        Pet savedPet = petService.createPet(pet);
+        return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
     }
 
 
@@ -56,14 +51,9 @@ public class PetController {
     })
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Pet>> listPetByUserId(@PathVariable String userId) {
-        try {
-            List<Pet> pets = petService.listPetByUserId(userId);
-            return new ResponseEntity<>(pets, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Pet> pets = petService.listPetByUserId(userId);
+        return new ResponseEntity<>(pets, HttpStatus.OK);
+
     }
 
     @Operation(summary = "Obtém um pet pelo seu ID")
@@ -77,13 +67,9 @@ public class PetController {
     })
     @GetMapping("/pet/{id}")
     public ResponseEntity<Pet> getPetById(@PathVariable UUID id) {
-        try {
-            Optional<Pet> pet = petService.getPetById(id);
-            return pet.map(ResponseEntity::ok)
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Optional<Pet> pet = petService.getPetById(id);
+        return pet.map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Operation(summary = "Desativar pet")
@@ -99,25 +85,18 @@ public class PetController {
     })
     @PutMapping("/desativar/{userId}/{petId}")
     public ResponseEntity<Pet> desativarPet(@PathVariable UUID petId, @PathVariable String userId) {
-        try {
-            Optional<Pet> optionalPet = petService.getPetById(petId);
-            if (optionalPet.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+       Optional<Pet> optionalPet = petService.getPetById(petId);
+       if (optionalPet.isEmpty()) {
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
 
-            Pet pet = optionalPet.get();
-            if (!pet.getUserId().equals(userId)) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
+       Pet pet = optionalPet.get();
+       if (!pet.getUserId().equals(userId)) {
+           return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+       }
 
-            Pet updatedPet = petService.desativarPet(petId);
-            return ResponseEntity.ok(updatedPet);
-
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       Pet updatedPet = petService.desativarPet(petId);
+       return ResponseEntity.ok(updatedPet);
     }
 
 }
