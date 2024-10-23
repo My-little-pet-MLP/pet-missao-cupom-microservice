@@ -90,15 +90,34 @@ public class PetController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Pet desativado com sucesso",
                     content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado",
+            @ApiResponse(responseCode = "404", description = "Pet ou usuário não encontrado",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "403", description = "O pet não pertence ao usuário",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PutMapping("/desativar/{petId}")
-    public ResponseEntity<Pet> desativarPet(@PathVariable UUID petId) {
-        Pet updatedPet = petService.desativarPet(petId);
-        return ResponseEntity.ok(updatedPet);
+    @PutMapping("/desativar/{userId}/{petId}")
+    public ResponseEntity<Pet> desativarPet(@PathVariable UUID petId, @PathVariable String userId) {
+        try {
+            Optional<Pet> optionalPet = petService.getPetById(petId);
+            if (optionalPet.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            Pet pet = optionalPet.get();
+            if (!pet.getUserId().equals(userId)) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
+            Pet updatedPet = petService.desativarPet(petId);
+            return ResponseEntity.ok(updatedPet);
+
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
