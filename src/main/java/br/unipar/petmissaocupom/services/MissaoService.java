@@ -19,6 +19,19 @@ public class MissaoService {
 
     public Missao createMissao(Missao missao) {
         missao.setConcluido(false);
+
+        if (missao instanceof MissaoTempo) {
+            MissaoTempo missaoTempo = (MissaoTempo) missao;
+            if (missaoTempo.getTempoLimite() <= 0) {
+                throw new IllegalArgumentException("Tempo limite deve ser maior que zero.");
+            }
+        } else if (missao instanceof MissaoArquivo) {
+            MissaoArquivo missaoArquivo = (MissaoArquivo) missao;
+            if (missaoArquivo.getArquivoUrl() == null || missaoArquivo.getArquivoUrl().isEmpty()) {
+                throw new IllegalArgumentException("URL do arquivo não pode ser vazia.");
+            }
+        }
+
         return missaoRepository.save(missao);
     }
 

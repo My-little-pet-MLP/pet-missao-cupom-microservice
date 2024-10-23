@@ -1,6 +1,8 @@
 package br.unipar.petmissaocupom.controllers;
 
 import br.unipar.petmissaocupom.models.Missao;
+import br.unipar.petmissaocupom.models.MissaoArquivo;
+import br.unipar.petmissaocupom.models.MissaoTempo;
 import br.unipar.petmissaocupom.services.MissaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -31,9 +35,34 @@ public class MissaoController {
                     content = @Content)
     })
     @PostMapping
-    public ResponseEntity<Missao> createMissao(@RequestBody Missao missao) {
-        Missao novaMissao = missaoService.createMissao(missao);
-        return new ResponseEntity<>(novaMissao, HttpStatus.CREATED);
+    public ResponseEntity<Missao> createMissao(@RequestBody Map<String, Object> missaoMap) {
+        String tipo = (String) missaoMap.get("tipo");
+
+        if ("TEMPO".equalsIgnoreCase(tipo)) {
+            MissaoTempo missaoTempo = new MissaoTempo(
+                    UUID.randomUUID(),
+                    (String) missaoMap.get("descricao"),
+                    new Date(),
+                    (String) missaoMap.get("userId"),
+                    Long.parseLong(missaoMap.get("tempoLimite").toString()),
+                    Boolean.parseBoolean(missaoMap.get("temporizadorAtivado").toString())
+            );
+            Missao novaMissao = missaoService.createMissao(missaoTempo);
+            return new ResponseEntity<>(novaMissao, HttpStatus.CREATED);
+
+        } else if ("ARQUIVO".equalsIgnoreCase(tipo)) {
+            MissaoArquivo missaoArquivo = new MissaoArquivo(
+                    UUID.randomUUID(),
+                    (String) missaoMap.get("descricao"),
+                    new Date(),
+                    (String) missaoMap.get("userId"),
+                    (String) missaoMap.get("arquivoUrl")
+            );
+            Missao novaMissao = missaoService.createMissao(missaoArquivo);
+            return new ResponseEntity<>(novaMissao, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "Lista todas as 5 missoes do usuário")
