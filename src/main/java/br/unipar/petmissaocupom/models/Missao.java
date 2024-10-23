@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Entity(name = "MISSOES")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "tipoMissao", discriminatorType = DiscriminatorType.STRING)
 public abstract class Missao {
 
     @Id
