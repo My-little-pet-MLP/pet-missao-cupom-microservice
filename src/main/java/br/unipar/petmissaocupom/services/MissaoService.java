@@ -1,8 +1,8 @@
 package br.unipar.petmissaocupom.services;
 
+import br.unipar.petmissaocupom.dtos.MissaoDTO;
+import br.unipar.petmissaocupom.enuns.TipoMissao;
 import br.unipar.petmissaocupom.models.Missao;
-import br.unipar.petmissaocupom.models.MissaoArquivo;
-import br.unipar.petmissaocupom.models.MissaoTempo;
 import br.unipar.petmissaocupom.repositories.MissaoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +17,23 @@ public class MissaoService {
     @Autowired
     private MissaoRepository missaoRepository;
 
-    public Missao createMissao(Missao missao) {
-        missao.setConcluido(false);
+    public Missao createMissao(MissaoDTO missaoDTO) {
+        Missao novaMissao = new Missao();
+        novaMissao.setId(UUID.randomUUID());
+        novaMissao.setDescricao(missaoDTO.getDescricao());
+        novaMissao.setDataGerada(new Date());
+        novaMissao.setUserId(missaoDTO.getUserId());
+        novaMissao.setTipo(missaoDTO.getTipo());
+        novaMissao.setConcluido(false);
 
-        if (missao instanceof MissaoTempo) {
-            MissaoTempo missaoTempo = (MissaoTempo) missao;
-            if (missaoTempo.getTempoLimite() <= 0) {
-                throw new IllegalArgumentException("Tempo limite deve ser maior que zero.");
-            }
-        } else if (missao instanceof MissaoArquivo) {
-            MissaoArquivo missaoArquivo = (MissaoArquivo) missao;
-            if (missaoArquivo.getArquivoUrl() == null || missaoArquivo.getArquivoUrl().isEmpty()) {
-                throw new IllegalArgumentException("URL do arquivo não pode ser vazia.");
-            }
+        if (missaoDTO.getTipo() == TipoMissao.TEMPO) {
+            novaMissao.setTempoLimite(missaoDTO.getTempoLimite());
+            novaMissao.setTemporizadorAtivado(missaoDTO.isTemporizadorAtivado());
+        } else if (missaoDTO.getTipo() == TipoMissao.ARQUIVO) {
+            novaMissao.setArquivoUrl(missaoDTO.getArquivoUrl());
         }
 
-        return missaoRepository.save(missao);
+        return missaoRepository.save(novaMissao);
     }
 
     public List<Missao> gerarMissoesDiariasParaUsuario(String userId) {
@@ -84,16 +85,14 @@ public class MissaoService {
         if (missao.isConcluido()) {
             throw new IllegalStateException("Missão já está concluída.");
         }
-
-        if (missao instanceof MissaoArquivo) {
-            MissaoArquivo missaoArquivo = (MissaoArquivo) missao;
-            if (missaoArquivo.getArquivoUrl() == null || !missaoArquivo.getArquivoUrl().isEmpty()) {
+        if (missao.getTipo() == TipoMissao.ARQUIVO) {
+            if (missao.getArquivoUrl() == null || missao.getArquivoUrl().isEmpty()) {
                 throw new IllegalStateException("Arquivo não encontrado para a missão de arquivo.");
             }
-        } else if (missao instanceof MissaoTempo) {
-            MissaoTempo missaoTempo = (MissaoTempo) missao;
+        }
+        if (missao.getTipo() == TipoMissao.TEMPO) {
             long tempoAtual = System.currentTimeMillis();
-            if (tempoAtual < missaoTempo.getTempoLimite()) {
+            if (tempoAtual < (missao.getDataGerada().getTime() + missao.getTempoLimite())) {
                 throw new IllegalStateException("O tempo da missão não expirou.");
             }
         }
