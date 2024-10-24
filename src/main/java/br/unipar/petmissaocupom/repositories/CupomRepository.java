@@ -13,5 +13,6 @@ public interface CupomRepository extends JpaRepository<Cupom, UUID> {
 
     List<Cupom> findByUserId(String userId);
     Optional<Cupom> findByIdAndUserId(UUID cupomId, String userId);
+    Cupom findFirstByUserIdIsNull();
 
 }

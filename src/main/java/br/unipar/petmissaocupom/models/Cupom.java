@@ -8,18 +8,18 @@ import jakarta.persistence.Id;
 import java.util.Date;
 import java.util.UUID;
 
-@Entity(name = "CUPONS")
-public class Cupom {
+    @Entity(name = "CUPONS")
+    public class Cupom {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    private String codigo;
-    private double porcentagem;
-    private Date dataGerado;
-    private Date dataVencimento;
-    private boolean utilizado;
-    private String userId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
+        private UUID id;
+        private String codigo;
+        private double porcentagem;
+        private Date dataGerado;
+        private Date dataVencimento;
+        private boolean utilizado;
+        private String userId;
 
     public Cupom() {
     }

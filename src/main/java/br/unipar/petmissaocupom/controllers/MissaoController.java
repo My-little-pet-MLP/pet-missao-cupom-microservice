@@ -1,7 +1,8 @@
 package br.unipar.petmissaocupom.controllers;
 
-import br.unipar.petmissaocupom.dtos.MissaoDTO;
 import br.unipar.petmissaocupom.models.Missao;
+import br.unipar.petmissaocupom.models.MissaoArquivo;
+import br.unipar.petmissaocupom.models.MissaoTempo;
 import br.unipar.petmissaocupom.services.MissaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,7 +23,7 @@ public class MissaoController {
     @Autowired
     private MissaoService missaoService;
 
-    @Operation(summary = "Criar uma nova missão")
+    @Operation(summary = "Criar uma nova missão com temporizador")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Missao criada com sucesso",
                     content = @Content(mediaType = "application/json")),
@@ -31,9 +32,25 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PostMapping
-    public Missao createMissao(@RequestBody MissaoDTO missaoDTO) {
-        return missaoService.createMissao(missaoDTO);
+    @PostMapping("/tempo")
+    public ResponseEntity<Missao> criarMissaoDeTempo(@RequestBody MissaoTempo missaoDeTempo) {
+        Missao missao = missaoService.salvarMissao(missaoDeTempo);
+        return new ResponseEntity<>(missao, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Criar uma nova missão com add arquivo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Missao criada com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content)
+    })
+    @PostMapping("/arquivo")
+    public ResponseEntity<Missao> criarMissaoDeArquivo(@RequestBody MissaoArquivo missaoDeArquivo) {
+        Missao missao = missaoService.salvarMissao(missaoDeArquivo);
+        return new ResponseEntity<>(missao, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Lista todas as 5 missoes do usuário")
@@ -68,7 +85,8 @@ public class MissaoController {
 
     @Operation(summary = "Verificar se todas as missoes do usuário estão concluidas")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Verificação realizada com sucesso, retornando se todas as missões estão concluídas",
+            @ApiResponse(responseCode = "200", description = "Verificação realizada com " +
+                    "sucesso, retornando se todas as missões estão concluídas",
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
                     content = @Content),

@@ -1,7 +1,5 @@
 package br.unipar.petmissaocupom.services;
 
-import br.unipar.petmissaocupom.dtos.MissaoDTO;
-import br.unipar.petmissaocupom.enuns.TipoMissao;
 import br.unipar.petmissaocupom.models.Missao;
 import br.unipar.petmissaocupom.repositories.MissaoRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,23 +15,8 @@ public class MissaoService {
     @Autowired
     private MissaoRepository missaoRepository;
 
-    public Missao createMissao(MissaoDTO missaoDTO) {
-        Missao novaMissao = new Missao();
-        novaMissao.setId(UUID.randomUUID());
-        novaMissao.setDescricao(missaoDTO.getDescricao());
-        novaMissao.setDataGerada(new Date());
-        novaMissao.setUserId(missaoDTO.getUserId());
-        novaMissao.setTipo(missaoDTO.getTipo());
-        novaMissao.setConcluido(false);
-
-        if (missaoDTO.getTipo() == TipoMissao.TEMPO) {
-            novaMissao.setTempoLimite(missaoDTO.getTempoLimite());
-            novaMissao.setTemporizadorAtivado(missaoDTO.isTemporizadorAtivado());
-        } else if (missaoDTO.getTipo() == TipoMissao.ARQUIVO) {
-            novaMissao.setArquivoUrl(missaoDTO.getArquivoUrl());
-        }
-
-        return missaoRepository.save(novaMissao);
+    public Missao salvarMissao(Missao missao) {
+        return missaoRepository.save(missao);
     }
 
     public List<Missao> gerarMissoesDiariasParaUsuario(String userId) {
@@ -58,7 +41,6 @@ public class MissaoService {
 
             missaoRepository.saveAll(missoesDoDia);
         }
-
         return missoesDoDia;
     }
 
@@ -76,25 +58,20 @@ public class MissaoService {
     }
 
     public Missao concluirMissao(UUID missaoId, String userId) {
-        Missao missao = missaoRepository.findById(missaoId)
-                .orElseThrow(() -> new EntityNotFoundException("Missão não encontrada com o id: " + missaoId));
+        Optional<Missao> missaoOpt = missaoRepository.findById(missaoId);
+
+        if (missaoOpt.isEmpty()) {
+            throw new EntityNotFoundException("Missão não encontrada.");
+        }
+
+        Missao missao = missaoOpt.get();
 
         if (!missao.getUserId().equals(userId)) {
             throw new IllegalArgumentException("Usuário não autorizado a concluir esta missão.");
         }
+
         if (missao.isConcluido()) {
             throw new IllegalStateException("Missão já está concluída.");
-        }
-        if (missao.getTipo() == TipoMissao.ARQUIVO) {
-            if (missao.getArquivoUrl() == null || missao.getArquivoUrl().isEmpty()) {
-                throw new IllegalStateException("Arquivo não encontrado para a missão de arquivo.");
-            }
-        }
-        if (missao.getTipo() == TipoMissao.TEMPO) {
-            long tempoAtual = System.currentTimeMillis();
-            if (tempoAtual < (missao.getDataGerada().getTime() + missao.getTempoLimite())) {
-                throw new IllegalStateException("O tempo da missão não expirou.");
-            }
         }
 
         missao.setConcluido(true);
