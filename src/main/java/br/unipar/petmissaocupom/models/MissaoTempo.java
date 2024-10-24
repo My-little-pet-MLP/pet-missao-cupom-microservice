@@ -1,8 +1,13 @@
 package br.unipar.petmissaocupom.models;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.util.Date;
 import java.util.UUID;
 
+@Entity
+@DiscriminatorValue("TEMPO")
 public class MissaoTempo extends Missao {
 
     private long tempoLimite;
