@@ -18,8 +18,8 @@ public class Missao {
     private String userId;
 
     private TipoMissao tipo;
-    private Long tempoLimite; // Para missões do tipo TEMPO
-    private boolean temporizadorAtivado; // Para missões do tipo TEMPO
+    private Long tempoLimite;
+    private Boolean temporizadorAtivado;
     private String arquivoUrl;
 
     public Missao() {
