@@ -14,9 +14,6 @@ public class CupomService {
     @Autowired
     private CupomRepository cupomRepository;
 
-    @Autowired
-    private MissaoService missaoService;
-
     public Cupom createCupom(Cupom cupom) {
         cupom.setUtilizado(false);
 
@@ -64,6 +61,10 @@ public class CupomService {
             return cupomRepository.save(cupom);
         }
         return null;
+    }
+
+    public List<Cupom> listarTodosOsCupons() {
+        return cupomRepository.findAll();
     }
 
 }

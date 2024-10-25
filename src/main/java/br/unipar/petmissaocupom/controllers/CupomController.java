@@ -115,4 +115,22 @@ public class CupomController {
         }
     }
 
+    @Operation(summary = "Listar todos os cupons")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cupom listados com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content)
+    })
+    @GetMapping("/listar")
+    public ResponseEntity<List<Cupom>> listarTodosOsCupons() {
+        List<Cupom> cupons = cupomService.listarTodosOsCupons();
+        if (cupons.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(cupons);
+    }
+
 }
