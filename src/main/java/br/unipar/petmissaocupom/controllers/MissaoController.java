@@ -32,7 +32,7 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PostMapping("/tempo")
+    @PostMapping("/add-missao-tempo")
     public ResponseEntity<Missao> criarMissaoDeTempo(@RequestBody MissaoTempo missaoDeTempo) {
         Missao missao = missaoService.salvarMissao(missaoDeTempo);
         return new ResponseEntity<>(missao, HttpStatus.CREATED);
@@ -47,7 +47,7 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PostMapping("/arquivo")
+    @PostMapping("/add-missao-arquivo")
     public ResponseEntity<Missao> criarMissaoDeArquivo(@RequestBody MissaoArquivo missaoDeArquivo) {
         Missao missao = missaoService.salvarMissao(missaoDeArquivo);
         return new ResponseEntity<>(missao, HttpStatus.CREATED);
