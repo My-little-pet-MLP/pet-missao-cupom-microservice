@@ -102,7 +102,7 @@ public class CupomController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PutMapping("/cupom/{id}/user/{userId}")
+    @PutMapping("/{id}/user/{userId}")
     public ResponseEntity<Cupom> atualizarCupomComUserId(@PathVariable UUID id, @PathVariable String userId) {
         try {
             Cupom cupomAtualizado = cupomService.atualizarCupom(id, userId);
