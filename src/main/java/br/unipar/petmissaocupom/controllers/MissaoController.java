@@ -32,7 +32,7 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PostMapping("/add-missao-tempo")
+    @PostMapping("/tempo")
     public ResponseEntity<Missao> criarMissaoDeTempo(@RequestBody MissaoTempo missaoDeTempo) {
         Missao missao = missaoService.salvarMissao(missaoDeTempo);
         return new ResponseEntity<>(missao, HttpStatus.CREATED);
@@ -47,7 +47,7 @@ public class MissaoController {
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
                     content = @Content)
     })
-    @PostMapping("/add-missao-arquivo")
+    @PostMapping("/arquivo")
     public ResponseEntity<Missao> criarMissaoDeArquivo(@RequestBody MissaoArquivo missaoDeArquivo) {
         Missao missao = missaoService.salvarMissao(missaoDeArquivo);
         return new ResponseEntity<>(missao, HttpStatus.CREATED);
@@ -95,8 +95,16 @@ public class MissaoController {
     })
     @GetMapping("/verificar-concluidas/{userId}")
     public ResponseEntity<Boolean> verificarMissoesConcluidas(@PathVariable String userId) {
-        boolean todasConcluidas = missaoService.todasMissoesConcluidas(userId);
-        return new ResponseEntity<>(todasConcluidas, HttpStatus.OK);
+        try {
+            List<Missao> missoes = missaoService.listarMissoesDoUsuario(userId);
+            if (missoes.isEmpty()) {
+                return new ResponseEntity<>(false, HttpStatus.OK);
+            }
+            boolean todasConcluidas = missoes.stream().allMatch(Missao::isConcluido);
+            return new ResponseEntity<>(todasConcluidas, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Marca uma missão como concluída")

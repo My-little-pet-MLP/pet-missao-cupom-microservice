@@ -47,25 +47,23 @@ public class CupomService {
         return null;
     }
 
-    public Cupom gerarCupomParaUsuarioSeMissoesConcluidas(String userId) {
-        boolean missoesConcluidas = missaoService.todasMissoesConcluidas(userId);
-
-        if (missoesConcluidas) {
-            Cupom cupom = cupomRepository.findFirstByUserIdIsNull();
-
-            if (cupom != null) {
-                cupom.setUserId(userId);
-                cupom.setDataVencimento(calcularDataVencimento());
-                return cupomRepository.save(cupom);
-            }
-        }
-        return null;
+    public Cupom buscarCupomPorId(UUID id) {
+        return cupomRepository.findById(id).orElse(null);
     }
 
-    private Date calcularDataVencimento() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 30);
-        return calendar.getTime();
+    public Cupom atualizarCupom(UUID cupomId, String userId) {
+        Cupom cupom = buscarCupomPorId(cupomId);
+        if (cupom != null) {
+            cupom.setUserId(userId);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date()); // Data atual
+            calendar.add(Calendar.DAY_OF_MONTH, 30);
+            cupom.setDataVencimento(calendar.getTime());
+
+            return cupomRepository.save(cupom);
+        }
+        return null;
     }
 
 }

@@ -23,9 +23,6 @@ public class CupomController {
     @Autowired
     private CupomService cupomService;
 
-    @Autowired
-    private MissaoService missaoService;
-
     @Operation(summary = "Inserir cupom")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom criado com sucesso",
@@ -96,13 +93,25 @@ public class CupomController {
     }
 
 
-    @PostMapping("/verificar-missoes/{userId}")
-    public ResponseEntity<Cupom> verificarMissoesEInserirUserId(@PathVariable String userId) {
-        Cupom cupom = cupomService.gerarCupomParaUsuarioSeMissoesConcluidas(userId);
-        if (cupom != null) {
-            return new ResponseEntity<>(cupom, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @Operation(summary = "Insere o userId no cupom")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cupom alterado com sucesso",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content)
+    })
+    @PutMapping("/cupom/{id}/user/{userId}")
+    public ResponseEntity<Cupom> atualizarCupomComUserId(@PathVariable UUID id, @PathVariable String userId) {
+        try {
+            Cupom cupomAtualizado = cupomService.atualizarCupom(id, userId);
+            if (cupomAtualizado == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(cupomAtualizado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

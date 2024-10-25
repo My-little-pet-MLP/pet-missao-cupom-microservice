@@ -48,15 +48,6 @@ public class MissaoService {
         return missaoRepository.findTop5ByUserIdOrderByDataGeradaDesc(userId);
     }
 
-    public boolean todasMissoesConcluidas(String userId) {
-        List<Missao> missoesDoUsuario = missaoRepository.findByUserId(userId);
-
-        if (missoesDoUsuario.size() == 5) {
-            return missoesDoUsuario.stream().allMatch(Missao::isConcluido);
-        }
-        return false;
-    }
-
     public Missao concluirMissao(UUID missaoId, String userId) {
         Optional<Missao> missaoOpt = missaoRepository.findById(missaoId);
 
