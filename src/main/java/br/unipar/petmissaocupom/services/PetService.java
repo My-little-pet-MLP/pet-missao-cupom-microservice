@@ -1,5 +1,6 @@
 package br.unipar.petmissaocupom.services;
 
+import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.models.Pet;
 import br.unipar.petmissaocupom.repositories.PetRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -73,6 +74,10 @@ public class PetService {
             return true;
         }
         return false;
+    }
+
+    public List<Pet> listarTodosOsPets() {
+        return petRepository.findAll();
     }
 
 }

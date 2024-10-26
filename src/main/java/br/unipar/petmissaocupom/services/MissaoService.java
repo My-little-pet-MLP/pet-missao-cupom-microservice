@@ -1,5 +1,6 @@
 package br.unipar.petmissaocupom.services;
 
+import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.models.Missao;
 import br.unipar.petmissaocupom.repositories.MissaoRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -75,6 +76,10 @@ public class MissaoService {
             return true;
         }
         return false;
+    }
+
+    public List<Missao> listarTodosAsMissoes() {
+        return missaoRepository.findAll();
     }
 
 }

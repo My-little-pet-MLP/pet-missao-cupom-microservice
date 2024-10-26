@@ -5,7 +5,9 @@ import br.unipar.petmissaocupom.models.MissaoArquivo;
 import br.unipar.petmissaocupom.models.MissaoTempo;
 import br.unipar.petmissaocupom.services.MissaoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +141,25 @@ public class MissaoController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Operation(summary = "Listar todos as missoes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Missao listadas com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Missao.class)))),
+            @ApiResponse(responseCode = "404", description = "Missao não encontrada",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/listar")
+    public ResponseEntity<List<Missao>> listarTodosAsMissoes() {
+        List<Missao> missoes = missaoService.listarTodosAsMissoes();
+        if (missoes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(missoes);
     }
 
 }

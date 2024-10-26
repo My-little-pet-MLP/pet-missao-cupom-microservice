@@ -2,7 +2,6 @@ package br.unipar.petmissaocupom.controllers;
 
 import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.services.CupomService;
-import br.unipar.petmissaocupom.services.MissaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

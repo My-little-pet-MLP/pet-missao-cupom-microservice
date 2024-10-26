@@ -3,7 +3,9 @@ package br.unipar.petmissaocupom.controllers;
 import br.unipar.petmissaocupom.models.Pet;
 import br.unipar.petmissaocupom.services.PetService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +118,25 @@ public class PetController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Operation(summary = "Listar todos os pets")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pet listados com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Pet.class)))),
+            @ApiResponse(responseCode = "404", description = "Pet não encontrado",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/listar")
+    public ResponseEntity<List<Pet>> listarTodosOsPets() {
+        List<Pet> pets = petService.listarTodosOsPets();
+        if (pets.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(pets);
     }
 
 }
