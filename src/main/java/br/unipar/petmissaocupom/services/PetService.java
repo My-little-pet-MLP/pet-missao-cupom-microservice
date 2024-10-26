@@ -67,4 +67,12 @@ public class PetService {
         return petRepository.save(pet);
     }
 
+    public boolean deletarPet(UUID petId) {
+        if (petRepository.existsById(petId)) {
+            petRepository.deleteById(petId);
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -4,6 +4,7 @@ import br.unipar.petmissaocupom.models.Cupom;
 import br.unipar.petmissaocupom.services.CupomService;
 import br.unipar.petmissaocupom.services.MissaoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,9 +30,9 @@ public class CupomController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Cupom.class))),
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
-                    content = @Content)
+                    content = @Content(mediaType = "application/json"))
     })
     @PostMapping("/gerar")
     public ResponseEntity<Cupom> createCupom(@RequestBody Cupom cupom) {
@@ -42,11 +43,12 @@ public class CupomController {
     @Operation(summary = "Lista todos os cupons do usuário")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupons listados com sucesso",
-                    content = @Content(mediaType = "application/json")),
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Cupom.class)))),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
-                    content = @Content)
+                    content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/usuario/{userId}")
     public ResponseEntity<List<Cupom>> listarCuponsPorUsuario(@PathVariable String userId) {
@@ -57,11 +59,12 @@ public class CupomController {
     @Operation(summary = "Desativa um cupom após ser utilizado")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom desativado com sucesso",
-                    content = @Content(mediaType = "application/json")),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Cupom.class))),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
-                    content = @Content)
+                    content = @Content(mediaType = "application/json"))
     })
     @PutMapping("/desativar/{cupomId}")
     public ResponseEntity<Cupom> desativarCupom(@PathVariable UUID cupomId) {
@@ -76,11 +79,12 @@ public class CupomController {
     @Operation(summary = "Busca um cupom por ID e UserId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom encontrado com sucesso",
-                    content = @Content(mediaType = "application/json")),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Cupom.class))),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
-                    content = @Content)
+                    content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/{cupomId}/user/{userId}")
     public ResponseEntity<Cupom> findCupomByIdAndUserId(@PathVariable UUID cupomId, @PathVariable String userId) {
@@ -96,11 +100,12 @@ public class CupomController {
     @Operation(summary = "Insere o userId no cupom")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom alterado com sucesso",
-                    content = @Content(mediaType = "application/json")),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Cupom.class))),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
-                    content = @Content)
+                    content = @Content(mediaType = "application/json"))
     })
     @PutMapping("/{id}/user/{userId}")
     public ResponseEntity<Cupom> atualizarCupomComUserId(@PathVariable UUID id, @PathVariable String userId) {
@@ -118,11 +123,12 @@ public class CupomController {
     @Operation(summary = "Listar todos os cupons")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cupom listados com sucesso",
-                    content = @Content(mediaType = "application/json")),
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Cupom.class)))),
             @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
-                    content = @Content),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Erro no servidor",
-                    content = @Content)
+                    content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/listar")
     public ResponseEntity<List<Cupom>> listarTodosOsCupons() {
@@ -131,6 +137,25 @@ public class CupomController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(cupons);
+    }
+
+    @Operation(summary = "Exclui um cupom pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Cupom excluído com sucesso",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Cupom não encontrado",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @DeleteMapping("/{cupomId}")
+    public ResponseEntity<Void> deletarCupom(@PathVariable UUID cupomId) {
+        boolean isDeleted = cupomService.deletarCupom(cupomId);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

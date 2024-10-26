@@ -99,4 +99,23 @@ public class PetController {
         return new ResponseEntity<>(updatedPet, HttpStatus.OK);
     }
 
+    @Operation(summary = "Exclui um pet pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Pet excluído com sucesso",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Pet não encontrado",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @DeleteMapping("/{petId}")
+    public ResponseEntity<Void> deletarCupom(@PathVariable UUID petId) {
+        boolean isDeleted = petService.deletarPet(petId);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

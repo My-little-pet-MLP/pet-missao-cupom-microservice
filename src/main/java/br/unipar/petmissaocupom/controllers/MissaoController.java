@@ -122,4 +122,23 @@ public class MissaoController {
         return new ResponseEntity<>(missaoConcluida, HttpStatus.OK);
     }
 
+    @Operation(summary = "Exclui uma missao pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Missao excluída com sucesso",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Missao não encontrada",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Erro no servidor",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @DeleteMapping("/{missaoId}")
+    public ResponseEntity<Void> deletarCupom(@PathVariable UUID missaoId) {
+        boolean isDeleted = missaoService.deletarMIssao(missaoId);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

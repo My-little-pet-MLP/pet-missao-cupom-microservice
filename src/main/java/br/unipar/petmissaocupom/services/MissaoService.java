@@ -69,4 +69,12 @@ public class MissaoService {
         return missaoRepository.save(missao);
     }
 
+    public boolean deletarMIssao(UUID missaoId) {
+        if (missaoRepository.existsById(missaoId)) {
+            missaoRepository.deleteById(missaoId);
+            return true;
+        }
+        return false;
+    }
+
 }

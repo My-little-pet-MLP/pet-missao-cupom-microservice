@@ -67,4 +67,12 @@ public class CupomService {
         return cupomRepository.findAll();
     }
 
+    public boolean deletarCupom(UUID cupomId) {
+        if (cupomRepository.existsById(cupomId)) {
+            cupomRepository.deleteById(cupomId);
+            return true;
+        }
+        return false;
+    }
+
 }
